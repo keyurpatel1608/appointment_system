@@ -21,31 +21,53 @@ class CompanyForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      child: Column(
-        children: <Widget>[
-          TextFormField(
-            controller: companyNameController,
-            decoration: const InputDecoration(
-              labelText: 'Company Name',
-              border: OutlineInputBorder(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            TextFormField(
+              controller: companyNameController,
+              decoration: const InputDecoration(
+                labelText: 'Company Name',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 16,
+                ),
+              ),
+              validator: (value) =>
+                  Validators.emptyValidator(value, 'Company Name'),
+              textInputAction: TextInputAction.next,
             ),
-            validator: (value) => Validators.validateEmpty(value, 'Company Name'),
-          ),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            controller: industryController,
-            decoration: const InputDecoration(
-              labelText: 'Industry',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 16.0),
+            TextFormField(
+              controller: industryController,
+              decoration: const InputDecoration(
+                labelText: 'Industry',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 16,
+                ),
+              ),
+              validator: (value) =>
+                  Validators.emptyValidator(value, 'Industry'),
+              textInputAction: TextInputAction.done,
             ),
-            validator: (value) => Validators.validateEmpty(value, 'Industry'),
-          ),
-          const SizedBox(height: 24.0),
-          ElevatedButton(
-            onPressed: onSubmit,
-            child: Text(submitButtonText),
-          ),
-        ],
+            const SizedBox(height: 24.0),
+            SizedBox(
+              height: 48,
+              child: ElevatedButton(
+                onPressed: onSubmit,
+                child: Text(
+                  submitButtonText,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

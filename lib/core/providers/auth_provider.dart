@@ -8,6 +8,8 @@ class AuthProvider with ChangeNotifier {
 
   User? get currentUser => _currentUser;
 
+  get isLoading => null;
+
   Future<void> login(String email, String password) async {
     await _authService.login(email, password);
     // In a real app, fetch user data after successful login

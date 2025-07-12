@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:appointment_system/core/utils/validators.dart';
-import 'package:appointment_system/core/providers/user_provider.dart'; // Assuming UserProvider handles company creation for now
+import 'package:appointment_system/core/providers/user_provider.dart';
 import 'package:appointment_system/core/utils/app_utils.dart';
 import 'package:appointment_system/core/constants/route_constants.dart';
 
@@ -9,7 +9,8 @@ class CompanyRegistrationScreen extends StatefulWidget {
   const CompanyRegistrationScreen({super.key});
 
   @override
-  State<CompanyRegistrationScreen> createState() => _CompanyRegistrationScreenState();
+  State<CompanyRegistrationScreen> createState() =>
+      _CompanyRegistrationScreenState();
 }
 
 class _CompanyRegistrationScreenState extends State<CompanyRegistrationScreen> {
@@ -26,26 +27,59 @@ class _CompanyRegistrationScreenState extends State<CompanyRegistrationScreen> {
 
   Future<void> _registerCompany() async {
     if (_formKey.currentState!.validate()) {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
       try {
-        // This is a simplified example. In a real app, company creation would be more complex.
-        // It might involve a dedicated CompanyProvider or a service.
-        // For now, we'll simulate it by just showing a success message.
+        // Show loading indicator
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Center(child: CircularProgressIndicator());
+          },
+        );
+
+        // Simulate company registration process
+        await Future.delayed(const Duration(seconds: 2));
+
+        // Hide loading indicator
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+
+        // TODO: Implement actual company creation logic
+        // final userProvider = Provider.of<UserProvider>(context, listen: false);
         // await userProvider.createCompany(_companyNameController.text, _industryController.text);
-        AppUtils.showSnackBar(context, 'Company registration successful!');
-        Navigator.of(context).pushReplacementNamed(RouteConstants.dashboardRoute); // Navigate to dashboard after registration
+
+        if (mounted) {
+          AppUtils.showSnackBar(context, 'Company registration successful!');
+          Navigator.of(
+            context,
+          ).pushReplacementNamed(RouteConstants.dashboardRoute);
+        }
       } catch (e) {
-        AppUtils.showSnackBar(context, 'Company registration failed: ${e.toString()}');
+        // Hide loading indicator if still showing
+        if (mounted) {
+          Navigator.of(context).pop();
+          AppUtils.showSnackBar(
+            context,
+            'Company registration failed: ${e.toString()}',
+          );
+        }
       }
     }
+  }
+
+  // Custom validator for empty fields
+  String? _validateEmpty(String? value, String fieldName) {
+    if (value == null || value.trim().isEmpty) {
+      return '$fieldName is required';
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register Your Company'),
-      ),
+      appBar: AppBar(title: const Text('Register Your Company')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -59,8 +93,9 @@ class _CompanyRegistrationScreenState extends State<CompanyRegistrationScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Company Name',
                     border: OutlineInputBorder(),
+                    hintText: 'Enter your company name',
                   ),
-                  validator: (value) => Validators.validateEmpty(value, 'Company Name'),
+                  validator: (value) => _validateEmpty(value, 'Company Name'),
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
@@ -68,13 +103,17 @@ class _CompanyRegistrationScreenState extends State<CompanyRegistrationScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Industry',
                     border: OutlineInputBorder(),
+                    hintText: 'Enter your industry',
                   ),
-                  validator: (value) => Validators.validateEmpty(value, 'Industry'),
+                  validator: (value) => _validateEmpty(value, 'Industry'),
                 ),
                 const SizedBox(height: 24.0),
-                ElevatedButton(
-                  onPressed: _registerCompany,
-                  child: const Text('Register Company'),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _registerCompany,
+                    child: const Text('Register Company'),
+                  ),
                 ),
               ],
             ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide DateUtils;
 import 'package:appointment_system/core/utils/date_utils.dart';
 
 class TimeSlotPicker extends StatefulWidget {
@@ -33,7 +33,9 @@ class _TimeSlotPickerState extends State<TimeSlotPicker> {
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: isStartTime ? (_startTime ?? TimeOfDay.now()) : (_endTime ?? TimeOfDay.now()),
+      initialTime: isStartTime
+          ? (_startTime ?? TimeOfDay.now())
+          : (_endTime ?? TimeOfDay.now()),
     );
     if (picked != null) {
       setState(() {
@@ -53,7 +55,7 @@ class _TimeSlotPickerState extends State<TimeSlotPicker> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Selected Date: ${DateUtil.formatDate(widget.selectedDate)}',
+          'Selected Date: ${DateUtils.formatDate(widget.selectedDate)}',
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
@@ -75,7 +77,9 @@ class _TimeSlotPickerState extends State<TimeSlotPicker> {
           trailing: const Icon(Icons.access_time),
           onTap: () => _selectTime(context, false),
         ),
-        if (_startTime != null && _endTime != null && _endTime!.hour < _startTime!.hour) // Basic validation
+        if (_startTime != null &&
+            _endTime != null &&
+            _endTime!.hour < _startTime!.hour) // Basic validation
           const Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: Text(

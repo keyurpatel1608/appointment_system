@@ -1,4 +1,4 @@
-export 'package:appointment_system/core/providers/availability_provider.dart';
+export 'package:appointment_system/features/availability_management/providers/availability_provider.dart';
 
 // You can add feature-specific availability providers here if needed
 // For now, we just re-export the core provider.

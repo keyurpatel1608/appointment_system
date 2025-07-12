@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:appointment_system/core/utils/validators.dart';
-import 'package:appointment_system/core/utils/date_utils.dart';
-import 'package:flutter/material.dart' hide DateUtils;
+import 'package:appointment_system/core/utils/date_utils.dart' as AppDateUtils;
 
 class AppointmentForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -57,14 +56,20 @@ class _AppointmentFormState extends State<AppointmentForm> {
       setState(() {
         _selectedDate = picked;
       });
-      widget.onDateTimeChanged(_selectedDate, _selectedStartTime, _selectedEndTime);
+      widget.onDateTimeChanged(
+        _selectedDate,
+        _selectedStartTime,
+        _selectedEndTime,
+      );
     }
   }
 
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: isStartTime ? (_selectedStartTime ?? TimeOfDay.now()) : (_selectedEndTime ?? TimeOfDay.now()),
+      initialTime: isStartTime
+          ? (_selectedStartTime ?? TimeOfDay.now())
+          : (_selectedEndTime ?? TimeOfDay.now()),
     );
     if (picked != null) {
       setState(() {
@@ -74,7 +79,11 @@ class _AppointmentFormState extends State<AppointmentForm> {
           _selectedEndTime = picked;
         }
       });
-      widget.onDateTimeChanged(_selectedDate, _selectedStartTime, _selectedEndTime);
+      widget.onDateTimeChanged(
+        _selectedDate,
+        _selectedStartTime,
+        _selectedEndTime,
+      );
     }
   }
 
@@ -101,7 +110,8 @@ class _AppointmentFormState extends State<AppointmentForm> {
               border: OutlineInputBorder(),
             ),
             maxLines: 3,
-            validator: (value) => Validators.emptyValidator(value, 'Description'),
+            validator: (value) =>
+                Validators.emptyValidator(value, 'Description'),
           ),
           const SizedBox(height: 16.0),
           TextFormField(
@@ -110,27 +120,34 @@ class _AppointmentFormState extends State<AppointmentForm> {
               labelText: 'Target User ID (e.g., Employee ID)',
               border: OutlineInputBorder(),
             ),
-            validator: (value) => Validators.emptyValidator(value, 'Target User ID'),
+            validator: (value) =>
+                Validators.emptyValidator(value, 'Target User ID'),
           ),
           const SizedBox(height: 16.0),
           ListTile(
-            title: Text(_selectedDate == null
-                ? 'Select Date'
-                : 'Date: ${DateUtils.formatDate(_selectedDate!)}'),
+            title: Text(
+              _selectedDate == null
+                  ? 'Select Date'
+                  : 'Date: ${AppDateUtils.DateUtils.formatDate(_selectedDate!)}',
+            ),
             trailing: const Icon(Icons.calendar_today),
             onTap: () => _selectDate(context),
           ),
           ListTile(
-            title: Text(_selectedStartTime == null
-                ? 'Select Start Time'
-                : 'Start Time: ${_selectedStartTime!.format(context)}'),
+            title: Text(
+              _selectedStartTime == null
+                  ? 'Select Start Time'
+                  : 'Start Time: ${_selectedStartTime!.format(context)}',
+            ),
             trailing: const Icon(Icons.access_time),
             onTap: () => _selectTime(context, true),
           ),
           ListTile(
-            title: Text(_selectedEndTime == null
-                ? 'Select End Time'
-                : 'End Time: ${_selectedEndTime!.format(context)}'),
+            title: Text(
+              _selectedEndTime == null
+                  ? 'Select End Time'
+                  : 'End Time: ${_selectedEndTime!.format(context)}',
+            ),
             trailing: const Icon(Icons.access_time),
             onTap: () => _selectTime(context, false),
           ),
